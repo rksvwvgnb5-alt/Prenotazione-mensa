@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prenotazione Pasti e Mezzi</title>
+    <style>
+        :root {
+            --primary: #2e4053;
+            --accent: #27ae60;
+            --bg: #f4f6f7;
+            --card-bg: #ffffff;
+            --text: #333;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+        }
+
+        .header {
+            text-align: center;
+            background-color: var(--primary);
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.3rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 1rem;
+            background-color: #fff;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .radio-btn {
+            flex: 1;
+            text-align: center;
+        }
+
+        .radio-btn input {
+            display: none;
+        }
+
+        .radio-btn label {
+            display: block;
+            padding: 12px 8px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: normal;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .radio-btn input:checked + label {
+            border-color: var(--accent);
+            background-color: #e8f8f5;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        button {
+            width: 100%;
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 14px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .stat-box {
+            background: #eef2f5;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-box .num {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .stat-box .lbl {
+            font-size: 0.75rem;
+            color: #666;
+        }
+
+        .booking-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .booking-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            font-size: 0.85rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .tag {
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .tag-militare { background: #d4efdf; color: #196f3d; }
+        .tag-proprio { background: #ebdef0; color: #76448a; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Prenotazione Mensa & Mezzi</h1>
+    </div>
+
+    <!-- Modulo di Prenotazione -->
+    <div class="card">
+        <form id="bookingForm">
+            <div class="form-group">
+                <label for="nome">Grado, Nome e Cognome</label>
+                <input type="text" id="nome" placeholder="es. Serg. Mario Rossi" required>
+            </div>
+
+            <div class="form-group">
+                <label for="data">Data Prenotazione</label>
+                <input type="date" id="data" required>
+            </div>
+
+            <div class="form-group">
+                <label>Pasto Richiesto</label>
+                <div class="radio-group">
+                    <div class="radio-btn">
+                        <input type="radio" id="pranzo" name="pasto" value="Pranzo" checked>
+                        <label for="pranzo">Pranzo</label>
+                    </div>
+                    <div class="radio-btn">
+                        <input type="radio" id="cena" name="pasto" value="Cena">
+                        <label for="cena">Cena</label>
+                    </div>
+                    <div class="radio-btn">
+                        <input type="radio" id="entrambi" name="pasto" value="Entrambi">
+                        <label for="entrambi">Entrambi</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Mezzo di Trasporto</label>
+                <div class="radio-group">
+                    <div class="radio-btn">
+                        <input type="radio" id="militare" name="mezzo" value="Militare" checked>
+                        <label for="militare">Mezzo Militare</label>
+                    </div>
+                    <div class="radio-btn">
+                        <input type="radio" id="proprio" name="mezzo" value="Proprio">
+                        <label for="proprio">Mezzo Proprio</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="targa">Targa / Note (Opzionale)</label>
+                <input type="text" id="targa" placeholder="es. EI-123AA o Nessuna">
+            </div>
+
+            <button type="submit">Conferma Prenotazione</button>
+        </form>
+    </div>
+
+    <!-- Riepilogo per Mensa/Gestione -->
+    <div class="card">
+        <h3>Riepilogo Giornaliero</h3>
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="num" id="totPranzi">0</div>
+                <div class="lbl">Tot. Pranzi</div>
+            </div>
+            <div class="stat-box">
+                <div class="num" id="totCene">0</div>
+                <div class="lbl">Tot. Cene</div>
+            </div>
+            <div class="stat-box">
+                <div class="num" id="totMilitari">0</div>
+                <div class="lbl">Mezzi Militari</div>
+            </div>
+            <div class="stat-box">
+                <div class="num" id="totPropri">0</div>
+                <div class="lbl">Mezzi Propri</div>
+            </div>
+        </div>
+
+        <ul class="booking-list" id="listaPrenotazioni"></ul>
+        <button onclick="clearData()" style="background-color: #c0392b; margin-top: 15px; padding: 8px; font-size: 0.8rem;">Azzera Dati</button>
+    </div>
+</div>
+
+<script>
+    // Imposta la data di oggi come default
+    document.getElementById('data').valueAsDate = new Date();
+
+    let prenotazioni = JSON.parse(localStorage.getItem('prenotazioni_mensa')) || [];
+
+    function updateUI() {
+        const list = document.getElementById('listaPrenotazioni');
+        list.innerHTML = '';
+        
+        let pranzi = 0, cene = 0, militari = 0, propri = 0;
+
+        prenotazioni.forEach((item, index) => {
+            // Contatori
+            if(item.pasto === 'Pranzo' || item.pasto === 'Entrambi') pranzi++;
+            if(item.pasto === 'Cena' || item.pasto === 'Entrambi') cene++;
+            if(item.mezzo === 'Militare') militari++;
+            if(item.mezzo === 'Proprio') propri++;
+
+            // Elemento Lista
+            const li = document.createElement('li');
+            li.className = 'booking-item';
+            const tagClass = item.mezzo === 'Militare' ? 'tag-militare' : 'tag-proprio';
+            
+            li.innerHTML = `
+                <div>
+                    <strong>${item.nome}</strong> (${item.pasto})<br>
+                    <small>${item.data} - ${item.targa ? 'Note: ' + item.targa : ''}</small>
+                </div>
+                <div>
+                    <span class="tag ${tagClass}">${item.mezzo}</span>
+                </div>
+            `;
+            list.appendChild(li);
+        });
+
+        document.getElementById('totPranzi').innerText = pranzi;
+        document.getElementById('totCene').innerText = cene;
+        document.getElementById('totMilitari').innerText = militari;
+        document.getElementById('totPropri').innerText = propri;
+    }
+
+    document.getElementById('bookingForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const nuovaPrenotazione = {
+            nome: document.getElementById('nome').value,
+            data: document.getElementById('data').value,
+            pasto: document.querySelector('input[name="pasto"]:checked').value,
+            mezzo: document.querySelector('input[name="mezzo"]:checked').value,
+            targa: document.getElementById('targa').value
+        };
+
+        prenotazioni.push(nuovaPrenotazione);
+        localStorage.setItem('prenotazioni_mensa', JSON.stringify(prenotazioni));
+        
+        // Reset form e aggiorna
+        document.getElementById('nome').value = '';
+        document.getElementById('targa').value = '';
+        updateUI();
+        alert('Prenotazione registrata con successo!');
+    });
+
+    function clearData() {
+        if(confirm('Vuoi davvero cancellare tutte le prenotazioni?')) {
+            localStorage.removeItem('prenotazioni_mensa');
+            prenotazioni = [];
+            updateUI();
+        }
+    }
+
+    // Inizializzazione
+    updateUI();
+</script>
+
+</body>
+</html>
